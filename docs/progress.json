@@ -1,0 +1,63 @@
+{
+  "seasons": [
+    {
+      "id": "s1",
+      "name": "Season 1 — Standard IronMON",
+      "items": [
+        { "id": "s1_fr", "label": "Pokémon FireRed", "note": "Nat Dex Gen 8 Variant" },
+        { "id": "s1_ss", "label": "Pokémon SoulSilver" },
+        { "id": "s1_em", "label": "Pokémon Emerald", "note": "Nat Dex Gen 8 Variant" },
+        { "id": "s1_pt", "label": "Pokémon Platinum" },
+        { "id": "s1_b2", "label": "Pokémon Black 2" },
+        { "id": "s1_x",  "label": "Pokémon X" },
+        { "id": "s1_as", "label": "Pokémon Alpha Sapphire" },
+        { "id": "s1_us", "label": "Pokémon Ultra Sun" }
+      ]
+    },
+
+    {
+      "id": "s2",
+      "name": "Season 2 — Doubles IronMON",
+      "items": [
+        { "id": "s2_fr", "label": "Pokémon FireRed", "note": "Nat Dex" },
+        { "id": "s2_ss", "label": "Pokémon SoulSilver" },
+        { "id": "s2_as", "label": "Pokémon Alpha Sapphire" },
+        { "id": "s2_pt", "label": "Pokémon Platinum" },
+        { "id": "s2_b2", "label": "Pokémon Black 2" },
+        { "id": "s2_x",  "label": "Pokémon X" },
+        { "id": "s2_um", "label": "Pokémon Ultra Moon" }
+      ]
+    },
+
+    {
+      "id": "s3",
+      "name": "Season 3 — Community Arc",
+      "items": [
+        { "id": "s3_fr_subpar", "label": "Pokémon FireRed", "note": "Subpar IronMON" },
+        { "id": "s3_hg_tb", "label": "Pokémon HeartGold", "note": "Triple Bond" },
+        { "id": "s3_rowe", "label": "Pokémon ROWE", "note": "Standard Clear" }
+      ]
+    },
+
+    {
+      "id": "s4",
+      "name": "Season 4 — Ultimate Gauntlet",
+      "items": [
+        { "id": "s4_fr", "label": "Pokémon FireRed", "note": "Vanilla" },
+        { "id": "s4_ss", "label": "Pokémon SoulSilver" },
+        { "id": "s4_as", "label": "Pokémon Alpha Sapphire" },
+        { "id": "s4_x",  "label": "Pokémon X" }
+      ]
+    },
+
+    {
+      "id": "s5",
+      "name": "Season 5 — The Summit",
+      "items": [
+        { "id": "s5_b2_kaizo", "label": "Pokémon Black 2", "note": "Kaizo IronMON" }
+      ]
+    }
+  ],
+
+  "completed_runs": []
+}
