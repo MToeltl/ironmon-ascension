@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Ironmon Ascension</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+  :root{
+    --bg: #0f172a;
+    --panel: #111827;
+    --panel2: #1e293b;
+    --text: #e2e8f0;
+    --muted: rgba(226,232,240,.72);
+    --accent: #facc15;
+    --link: #60a5fa;
+    --ok: #34d399;
+    --line: rgba(226,232,240,.16);
+  }
+  body{
+    margin:0;
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header{
+    padding: 64px 18px 44px;
+    background: linear-gradient(135deg, #111827, #0f172a);
+    border-bottom: 1px solid var(--line);
+  }
+  .wrap{ max-width: 1080px; margin: 0 auto; }
+  h1{ margin:0; font-size: 2.6rem; letter-spacing: 1px; text-align:center; }
+  .subtitle{ text-align:center; margin-top: 10px; color: var(--muted); }
+  .tldr{
+    margin: 18px auto 0;
+    max-width: 920px;
+    background: rgba(250,204,21,.08);
+    border: 1px solid rgba(250,204,21,.22);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: rgba(226,232,240,.92);
+  }
+  main{ padding: 36px 18px 70px; }
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  @media(min-width: 980px){
+    .grid{ grid-template-columns: 460px 1fr; }
+  }
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .card h2{
+    margin:0 0 12px 0;
+    font-size: 1.2rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
+  }
+  a{ color: var(--link); text-decoration:none; }
+  a:hover{ text-decoration: underline; }
+
+  /* Ladder */
+  .ladder{
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .step{
+    display:grid;
+    grid-template-columns: 26px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 10px 10px;
+    border-radius: 10px;
+    background: rgba(30,41,59,.55);
+    border: 1px solid rgba(226,232,240,.10);
+  }
+  .dot{
+    width: 18px; height: 18px; border-radius: 99px;
+    margin-top: 2px;
+    border: 2px solid rgba(226,232,240,.35);
+    background: transparent;
+  }
+  .step.completed .dot{
+    border-color: rgba(52,211,153,.9);
+    background: rgba(52,211,153,.22);
+  }
+  .step.active{
+    border-color: rgba(250,204,21,.35);
+    background: rgba(250,204,21,.06);
+  }
+  .step .title{
+    font-weight: 800;
+  }
+  .step .meta{
+    color: var(--muted);
+    font-size: .92rem;
+    margin-top: 2px;
+  }
+  .progress{
+    margin-top: 14px;
+    height: 10px;
+    background: rgba(226,232,240,.10);
+    border-radius: 99px;
+    overflow:hidden;
+    border: 1px solid rgba(226,232,240,.12);
+  }
+  .bar{
+    height: 100%;
+    width: 0%;
+    background: rgba(250,204,21,.85);
+  }
+  .progtext{
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: .92rem;
+  }
+
+  /* Runs */
+  .runs{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .run{
+    background: var(--panel2);
+    border: 1px solid rgba(226,232,240,.12);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .run img{
+    width:100%;
+    border-radius: 10px;
+    border: 1px solid rgba(226,232,240,.10);
+    margin-bottom: 10px;
+    display:block;
+  }
+  .run .title{ font-weight: 900; }
+  .run .small{ color: var(--muted); font-size:.92rem; margin-top: 4px; }
+  .pillrow{ margin-top: 10px; display:flex; flex-wrap:wrap; gap:8px; }
+  .pill{
+    display:inline-block;
+    font-size: .85rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(226,232,240,.14);
+    background: rgba(226,232,240,.06);
+    color: rgba(226,232,240,.85);
+  }
+
+  footer{
+    text-align:center;
+    color: rgba(226,232,240,.55);
+    padding: 32px 18px 40px;
+    border-top: 1px solid var(--line);
+  }
+  .err{
+    color: rgba(226,232,240,.75);
+    padding: 10px 0;
+  }
+</style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <h1>IRONMON ASCENSION</h1>
+    <div class="subtitle">A Long-Term Climb Through Discipline, Adaptation, and Challenge</div>
+
+    <div class="tldr">
+      <strong>TL;DR:</strong>
+      Ironmon Ascension is a long-term Pokémon challenge ladder focused on discipline and sustainability.
+      No deadlines, no streak requirements, no resets. Progress is measured by completion over time, with health prioritized above pace.
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap grid">
+
+    <section class="card">
+      <h2>Ladder Progression</h2>
+      <div class="ladder" id="ladder"></div>
+
+      <div class="progress" aria-label="Overall progress">
+        <div class="bar" id="bar"></div>
+      </div>
+      <div class="progtext" id="progtext">Loading ladder…</div>
+    </section>
+
+    <section class="card">
+      <h2>Manifesto</h2>
+      <p>
+        The full project philosophy and structure live in the official manifesto (this repo’s README).
+      </p>
+      <p>
+        <a id="manifestoLink" href="#" target="_blank" rel="noopener">Read the Manifesto →</a>
+      </p>
+      <p style="color: var(--muted); margin-top: 14px;">
+        This site shows public progress only: completed runs + validation proof + optional VOD links.
+      </p>
+    </section>
+
+  </div>
+
+  <div class="wrap" style="margin-top:22px;">
+    <section class="card">
+      <h2>Completed Runs</h2>
+      <div class="runs" id="runs"></div>
+      <div class="err" id="runsEmpty" style="display:none;">No completed runs posted yet.</div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  The summit matters. Protecting health matters more.
+</footer>
+
+<script>
+  // === LOCKED LADDER ===
+  // Progress is computed ONLY from goal_id values in runs.json.
+  // This prevents typos/drift from breaking season counts.
+  const SEASONS = [
+    {
+      season: 1,
+      title: "Season 1 — Standard IronMON",
+      meta: "Foundation",
+      goals: [
+        { id: "S1_FR_NATDEX", label: "FireRed (Nat Dex Gen 8 Variant)" },
+        { id: "S1_SS",        label: "SoulSilver" },
+        { id: "S1_EM_NATDEX", label: "Emerald (Nat Dex Gen 8 Variant)" },
+        { id: "S1_PLAT",      label: "Platinum" },
+        { id: "S1_B2",        label: "Black 2" },
+        { id: "S1_X",         label: "X" },
+        { id: "S1_AS",        label: "Alpha Sapphire" },
+        { id: "S1_US",        label: "Ultra Sun" }
+      ]
+    },
+    {
+      season: 2,
+      title: "Season 2 — Doubles IronMON",
+      meta: "Strategy",
+      goals: [
+        { id: "S2_FR_NATDEX", label: "FireRed (Nat Dex)" },
+        { id: "S2_SS",        label: "SoulSilver" },
+        { id: "S2_AS",        label: "Alpha Sapphire" },
+        { id: "S2_PLAT",      label: "Platinum" },
+        { id: "S2_B2",        label: "Black 2" },
+        { id: "S2_X",         label: "X" },
+        { id: "S2_UM",        label: "Ultra Moon" }
+      ]
+    },
+    {
+      season: 3,
+      title: "Season 3 — Community Arc",
+      meta: "Exploration & Adaptation",
+      goals: [
+        { id: "S3_SUBPAR_FR", label: "Subpar IronMON — FireRed (Champion)" },
+        { id: "S3_TB_HG",     label: "Triple Bond — HeartGold (Defeat Lance)" },
+        { id: "S3_ROWE",      label: "Pokémon ROWE (Champion)" }
+      ]
+    },
+    {
+      season: 4,
+      title: "Season 4 — Ultimate Gauntlet",
+      meta: "Discipline",
+      goals: [
+        { id: "S4_FR_VAN",    label: "FireRed (Vanilla)" },
+        { id: "S4_SS",        label: "SoulSilver" },
+        { id: "S4_AS",        label: "Alpha Sapphire" },
+        { id: "S4_X",         label: "X" }
+      ]
+    },
+    {
+      season: 5,
+      title: "Season 5 — The Summit",
+      meta: "Kaizo IronMON (Black 2)",
+      goals: [
+        { id: "S5_B2_KAIZO",  label: "Black 2 (Kaizo IronMON)" }
+      ]
+    }
+  ];
+
+  function doneGoalSet(runs, season){
+    const set = new Set();
+    for (const r of runs){
+      if (Number(r.season) !== Number(season)) continue;
+      if (r.goal_id) set.add(String(r.goal_id).trim());
+    }
+    return set;
+  }
+
+  function seasonProgress(runs, seasonDef){
+    const done = doneGoalSet(runs, seasonDef.season);
+    const total = seasonDef.goals.length;
+    let completed = 0;
+    for (const g of seasonDef.goals){
+      if (done.has(g.id)) completed++;
+    }
+    return { completed, total };
+  }
+
+  function firstIncompleteSeasonIndex(runs){
+    for (let i=0;i<SEASONS.length;i++){
+      const p = seasonProgress(runs, SEASONS[i]);
+      if (p.completed < p.total) return i;
+    }
+    return SEASONS.length - 1;
+  }
+
+  function renderLadder(runs){
+    const el = document.getElementById("ladder");
+    el.innerHTML = "";
+
+    const activeIdx = firstIncompleteSeasonIndex(runs);
+    let seasonsDone = 0;
+
+    SEASONS.forEach((s, idx) => {
+      const p = seasonProgress(runs, s);
+      const completedSeason = p.completed >= p.total;
+      if (completedSeason) seasonsDone++;
+
+      const step = document.createElement("div");
+      step.className = "step" + (completedSeason ? " completed" : "") + (idx === activeIdx ? " active" : "");
+      step.innerHTML = `
+        <div class="dot" aria-hidden="true"></div>
+        <div>
+          <div class="title">${s.title}</div>
+          <div class="meta">${s.meta} • ${p.completed}/${p.total} goals ${completedSeason ? "• Completed" : (idx===activeIdx ? "• Current Focus" : "")}</div>
+        </div>
+      `;
+      el.appendChild(step);
+    });
+
+    const pct = Math.round((seasonsDone / SEASONS.length) * 100);
+    document.getElementById("bar").style.width = pct + "%";
+    document.getElementById("progtext").textContent = `${seasonsDone}/${SEASONS.length} seasons completed (${pct}%).`;
+  }
+
+  function renderRuns(runs){
+    const container = document.getElementById("runs");
+    const empty = document.getElementById("runsEmpty");
+    container.innerHTML = "";
+
+    if (!runs.length){
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+
+    // newest first (YYYY-MM-DD sorts correctly if consistent)
+    const sorted = [...runs].sort((a,b) => String(b.completed_at||"").localeCompare(String(a.completed_at||"")));
+
+    for (const r of sorted){
+      const card = document.createElement("div");
+      card.className = "run";
+
+      const imgFinal = `runs/${r.id}/proof_final.png`;
+      const imgHof = `runs/${r.id}/proof_hof.png`;
+
+      const vodLink = r.vod
+        ? `<a href="${r.vod}" target="_blank" rel="noopener">Watch VOD</a>`
+        : "";
+
+      const hofLink = r.has_hof
+        ? `<a href="${imgHof}" target="_blank" rel="noopener">View HOF Proof</a>`
+        : "";
+
+      const links = [vodLink, hofLink].filter(Boolean).join(" • ");
+
+      card.innerHTML = `
+        <img src="${imgFinal}" alt="Completion Proof">
+        <div class="title">${r.title || (`Season ${r.season} — ${r.display || "Completed Run"}`)}</div>
+        <div class="small">${r.completed_at ? `Completed: ${r.completed_at}` : ""}</div>
+        <div class="small">${r.final_pokemon ? `Final Pokémon: ${r.final_pokemon}` : ""}</div>
+        <div class="pillrow">
+          ${r.goal_id ? `<span class="pill">${r.goal_id}</span>` : ""}
+          ${r.variant ? `<span class="pill">${r.variant}</span>` : ""}
+        </div>
+        ${links ? `<div class="small" style="margin-top:10px;">${links}</div>` : ""}
+      `;
+
+      container.appendChild(card);
+    }
+  }
+
+  async function loadRuns(){
+    try{
+      const res = await fetch("runs.json", { cache: "no-store" });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data) ? data : [];
+    }catch{
+      return [];
+    }
+  }
+
+  (async () => {
+    // Link to the repo README as your manifesto
+    // This builds a URL like: https://github.com/<owner>/<repo>
+    const parts = location.pathname.split("/").filter(Boolean);
+    const repo = parts.length ? parts[0] : "";
+    // If this is served from <user>.github.io/<repo>/, repo will be that folder.
+    // If you use a custom domain, set REPO_URL manually below.
+    const REPO_URL = ""; // OPTIONAL: set to "https://github.com/YOURUSER/YOURREPO" for custom domains
+    const guessed = (location.hostname.endsWith("github.io") && repo) ? `https://github.com/${location.hostname.split(".")[0]}/${repo}` : "";
+    document.getElementById("manifestoLink").href = REPO_URL || guessed || "#";
+
+    const runs = await loadRuns();
+    renderLadder(runs);
+    renderRuns(runs);
+  })();
+</script>
+
+</body>
+</html>
