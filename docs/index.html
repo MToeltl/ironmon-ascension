@@ -75,26 +75,6 @@ body{
   cursor:pointer;
 }
 
-.pills{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.pill{
-  font-family:var(--mono);
-  font-size:12px;
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.15);
-  color:var(--muted);
-}
-
-.pill.good{border-color:var(--good);color:#d7ffef;}
-.pill.warn{border-color:var(--warn);color:#fff1c6;}
-.pill.cyan{border-color:var(--accent);color:#e2f7ff;}
-
 .card{
   background:rgba(12,22,40,.8);
   border-radius:var(--radius);
@@ -402,7 +382,7 @@ body.modalOpen{ overflow:hidden; }
   <div class="card">
     <h2>Ladder Progression</h2>
 
-    <!-- rendered from progress.json -->
+    <!-- rendered from structure.json + completed.json -->
     <div id="seasonsMount"></div>
 
     <div class="progressBar" aria-label="Overall games cleared progress">
@@ -434,7 +414,6 @@ body.modalOpen{ overflow:hidden; }
       </p>
 
       <div class="modalGrid">
-
         <div>
           <p class="modalH">Why this exists</p>
           <p class="modalP">
@@ -526,7 +505,6 @@ body.modalOpen{ overflow:hidden; }
             There are no deadlines. There is no race. There is only progression.
           </p>
         </div>
-
       </div>
 
       <div class="modalQuote">
@@ -539,17 +517,25 @@ body.modalOpen{ overflow:hidden; }
 <script>
 (async function () {
   // ---- config ----
-  const DATA_URL = 'progress.json';
+  const STRUCTURE_URL = 'structure.json';
+  const COMPLETED_URL = 'completed.json';
   const OPEN_FIRST_SEASON = true;
 
-  const res = await fetch(DATA_URL + '?v=' + Date.now(), { cache: 'no-store' });
-  if (!res.ok) throw new Error('Failed to load ' + DATA_URL);
-  const data = await res.json();
+  const [structureRes, completedRes] = await Promise.all([
+    fetch(STRUCTURE_URL + '?v=' + Date.now(), { cache: 'no-store' }),
+    fetch(COMPLETED_URL + '?v=' + Date.now(), { cache: 'no-store' })
+  ]);
 
-  const seasons = Array.isArray(data.seasons) ? data.seasons : [];
-  const runs = Array.isArray(data.completed_runs) ? data.completed_runs : [];
+  if (!structureRes.ok) throw new Error('Failed to load ' + STRUCTURE_URL);
+  if (!completedRes.ok) throw new Error('Failed to load ' + COMPLETED_URL);
 
-  // Completed items are driven ONLY by completed_runs
+  const structureData = await structureRes.json();
+  const completedData = await completedRes.json();
+
+  const seasons = Array.isArray(structureData.seasons) ? structureData.seasons : [];
+  const runs = Array.isArray(completedData.completed) ? completedData.completed : [];
+
+  // Completed items are driven ONLY by completed.json
   const completedSet = new Set(runs.map(r => r.item_id));
 
   // Map item_id -> label for Completed Runs rendering
@@ -676,11 +662,8 @@ body.modalOpen{ overflow:hidden; }
     const seasonName = meta.seasonName ? ` • ${meta.seasonName}` : '';
     const date = r.date ? ` • ${escapeHtml(r.date)}` : '';
 
-    const proofLink = (r.proof && String(r.proof).trim().length)
-      ? `<a href="${escapeAttr(r.proof)}" target="_blank" rel="noreferrer">PROOF</a>` : '';
-
-    const vodLink = (r.vod && String(r.vod).trim().length)
-      ? `<a href="${escapeAttr(r.vod)}" target="_blank" rel="noreferrer">VOD</a>` : '';
+    const proofLinks = renderLinkGroup(r.proof, 'PROOF');
+    const vodLinks = renderLinkGroup(r.vod, 'VOD');
 
     return `
       <div class="runRow">
@@ -689,8 +672,8 @@ body.modalOpen{ overflow:hidden; }
           <div class="runMeta">${date}${seasonName}</div>
         </div>
         <div class="runLinks">
-          ${proofLink}
-          ${vodLink}
+          ${proofLinks}
+          ${vodLinks}
         </div>
       </div>
     `;
@@ -738,6 +721,55 @@ body.modalOpen{ overflow:hidden; }
       if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
     });
   })();
+
+  // Supports:
+  // - string: "https://..."
+  // - array of strings: ["https://...","https://..."]
+  // - array of objects: [{label:"...",url:"..."}]
+  // - object: {label:"...",url:"..."}
+  function renderLinkGroup(value, prefix){
+    if (!value) return '';
+
+    // Single string (legacy)
+    if (typeof value === 'string') {
+      const u = value.trim();
+      if (!u) return '';
+      return `<a href="${escapeAttr(u)}" target="_blank" rel="noreferrer">${prefix}</a>`;
+    }
+
+    // Object {label,url}
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      if (typeof value.url === 'string' && value.url.trim().length) {
+        const label = (value.label && String(value.label).trim().length) ? String(value.label).trim() : prefix;
+        return `<a href="${escapeAttr(value.url)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`;
+      }
+      return '';
+    }
+
+    // Array of strings or objects
+    if (Array.isArray(value)) {
+      return value.map((x, idx) => {
+        // string item
+        if (typeof x === 'string') {
+          const u = x.trim();
+          if (!u) return '';
+          return `<a href="${escapeAttr(u)}" target="_blank" rel="noreferrer">${prefix} ${idx+1}</a>`;
+        }
+
+        // object item
+        if (x && typeof x.url === 'string' && x.url.trim().length) {
+          const label = (x.label && String(x.label).trim().length)
+            ? String(x.label).trim()
+            : `${prefix} ${idx+1}`;
+          return `<a href="${escapeAttr(x.url)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`;
+        }
+
+        return '';
+      }).filter(Boolean).join('');
+    }
+
+    return '';
+  }
 
   function escapeHtml(s){
     return String(s)
