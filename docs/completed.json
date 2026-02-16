@@ -1,28 +1,4 @@
 {
   "completed": [
-    {
-      "item_id": "s1_fr",
-      "date": "2026-02-16",
-      "proof": [
-        {
-          "label": "Hall of Fame",
-          "url": "https://i.ibb.co/DgH0X9pZ/02-16-26-09-57-Emu-Hawk-Southernhairnosedwombat-w5o6-T7vt17i-EDt-B.png"
-        },
-        {
-          "label": "Trainer Card",
-          "url": "https://i.ibb.co/REPLACE_THIS_WITH_PHOTO_2.png"
-        }
-      ],
-      "vod": [
-        {
-          "label": "Vod Part 1",
-          "url": "https://www.youtube.com/watch?v=IjSzsiYXDh8&list=PLb_5fF_O3FvhiXLByjjZIghO7jLtqzSOP"
-        },
-        {
-          "label": "Elite Four",
-          "url": "https://www.youtube.com/watch?v=REPLACE_THIS_WITH_VOD_2"
-        }
-      ]
-    }
   ]
 }
