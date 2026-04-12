@@ -19,20 +19,16 @@ return [
             'tag' => 'Foundation',
         ],
         [
-            'name' => 'Season 2 — Standard Doubles',
-            'tag' => 'Strategy',
-        ],
-        [
-            'name' => 'Season 3 — Ultimate',
+            'name' => 'Season 2 — Ultimate',
             'tag' => 'Discipline',
         ],
         [
-            'name' => 'Season 4 — Ultimate Doubles',
-            'tag' => 'Execution',
+            'name' => 'Season 3 — Kaizo',
+            'tag' => 'Summit',
         ],
         [
-            'name' => 'Season 5 — Kaizo',
-            'tag' => 'Summit',
+            'name' => 'Season 4 — Kaizo Doubles',
+            'tag' => 'Execution',
         ],
     ],
 ];
