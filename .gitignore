@@ -2,3 +2,7 @@ admin/
 data/progress.json
 data/progress.template.json
 vendor/
+.env
+.env*
+assets/dashboard.css
+admin/dashboard.js
